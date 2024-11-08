@@ -14,7 +14,7 @@ build:
     - export DOCKER_BUILDKIT=1  # Enable Docker BuildKit for better performance
   script:
     - echo "Building the Docker image using docker-compose..."
-    - docker compose -f docker compose.yml build  # Build the image using docker compose
+    - docker compose -f docker-compose.yml build  # Build the image using docker compose
   only:
     - main  # Run the build only on the main branch
 
@@ -24,7 +24,7 @@ test:
   image: node:22  # Use Node image to run tests
   before_script:
     - echo "Starting the application container..."
-    - docker compose -f docker compose.yml up -d  # Start the app in detached mode
+    - docker compose -f docker-compose.yml up -d  # Start the app in detached mode
     - echo "Waiting for the app to be ready..."
     - sleep 10  # Allow some time for the app to initialize (You can adjust the time if necessary)
   script:
@@ -46,6 +46,6 @@ deploy:
     - docker:dind  # Docker-in-Docker service for deployment
   script:
     - echo "Deploying the application using docker compose..."
-    - docker compose -f docker compose.yml up -d  # Start the app in detached mode for deployment
+    - docker compose -f docker-compose.yml up -d  # Start the app in detached mode for deployment
   only:
     - main  # Run deploy only on the main branch
