@@ -1,0 +1,51 @@
+stages:
+  - build
+  - test
+  - deploy
+
+# Build stage
+build:
+  stage: build
+  image: docker:latest  # Use Docker image to build the container
+  services:
+    - docker:dind  # Docker-in-Docker service for building Docker images
+  before_script:
+    - echo "Setting up Docker to run in GitLab CI..."
+    - export DOCKER_BUILDKIT=1  # Enable Docker BuildKit for better performance
+  script:
+    - echo "Building the Docker image using docker-compose..."
+    - docker-compose -f docker-compose.yml build  # Build the image using docker-compose
+  only:
+    - main  # Run the build only on the main branch
+
+# Test stage
+test:
+  stage: test
+  image: node:22  # Use Node image to run tests
+  before_script:
+    - echo "Starting the application container..."
+    - docker-compose -f docker-compose.yml up -d  # Start the app in detached mode
+    - echo "Waiting for the app to be ready..."
+    - sleep 10  # Allow some time for the app to initialize (You can adjust the time if necessary)
+  script:
+    - echo "Running tests inside a temporary container..."
+    - docker-compose run --rm todo-app npm run test  # Run tests inside a temporary container
+    - echo "Tests completed!"
+  after_script:
+    - echo "Stopping and cleaning up the containers..."
+    - docker-compose down  # Stop and remove the containers after tests
+    - docker-compose down -v  # Remove volumes to clean up the environment
+  only:
+    - main  # Run tests only on the main branch
+
+# Deploy stage
+deploy:
+  stage: deploy
+  image: docker:latest  # Use Docker image for deployment
+  services:
+    - docker:dind  # Docker-in-Docker service for deployment
+  script:
+    - echo "Deploying the application using docker-compose..."
+    - docker-compose -f docker-compose.yml up -d  # Start the app in detached mode for deployment
+  only:
+    - main  # Run deploy only on the main branch

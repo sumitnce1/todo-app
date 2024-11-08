@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  todo-app:
+    image: todo-app
+    container_name: todo-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    # command: ["npm", "start"]
+
+  test:
+    image: todo-app  # Use the same image as the todo-app container
+    container_name: todo-app-test
+    depends_on:
+      - todo-app  # Ensure the app container is up before starting tests
+    command: ["npm", "run", "test"]  # Run tests after the app is running
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=test  # Set environment to 'test' for the test run

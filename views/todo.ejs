@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo List</title>
+    <style>
+      /* Add the styles from your original template here */
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+      .container {
+        max-width: 600px;
+        width: 100%;
+        background-color: #fff;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+      }
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+      form {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+      input[type="text"] {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      button {
+        padding: 8px 16px;
+        border: none;
+        background-color: #007bff;
+        color: #fff;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th, td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+        vertical-align: middle;
+      }
+      th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+      }
+      .btn {
+        padding: 5px 12px;
+        border-radius: 20px;
+        color: #fff;
+        text-decoration: none;
+        font-size: 0.9em;
+        display: inline-block;
+        text-align: center;
+        white-space: nowrap;
+      }
+      .btn-info {
+        background-color: #17a2b8;
+      }
+      .btn-info:hover {
+        background-color: #138496;
+      }
+      .btn-danger {
+        background-color: #dc3545;
+      }
+      .btn-danger:hover {
+        background-color: #c82333;
+      }
+
+      /* Responsive styling */
+      @media (max-width: 600px) {
+        .container {
+          padding: 15px;
+        }
+        th, td {
+          font-size: 0.9em;
+          padding: 8px;
+        }
+        .btn {
+          font-size: 0.8em;
+          padding: 4px 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Todo List</h1>
+
+      <% if (todos.length === 0) { %>
+        <p>No tasks available. Add a new task!</p>
+      <% } else { %>
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Edit</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% todos.forEach(todo => { %>
+              <tr>
+                <td><%= todo.item %></td>
+                <td>
+                  <a href="/todo/<%= todo.id %>" class="btn btn-info">Edit</a>
+                </td>
+                <td>
+                  <a href="/todo/delete/<%= todo.id %>" class="btn btn-danger">Delete</a>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } %>
+
+      <form action="/todo/add" method="POST">
+        <input type="text" name="item" placeholder="Add new item" required />
+        <button type="submit">Add</button>
+      </form>
+    </div>
+  </body>
+</html>
